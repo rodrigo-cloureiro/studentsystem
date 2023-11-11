@@ -1,0 +1,19 @@
+h1 {
+    font-family: sans-serif;
+}
+
+.title,
+.subtitle {
+    text-decoration: underline;
+}
+
+.title,
+.subtitle,
+.btn_submit {
+    color: #1876d2;
+}
+
+.students {
+    font-family: sans-serif;
+    color: #1876d2 !important;
+}

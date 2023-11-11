@@ -21,4 +21,18 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+
+    @Override
+    public void deleteStudent(Student student) {
+        studentRepository.delete(student);
+    }
+
+    @Override
+    public void editStudent(Student student) {
+        System.out.println(student.getId());
+        Student existingStudent = studentRepository.findById(student.getId()).orElse(null);
+        existingStudent.setName(student.getName());
+        existingStudent.setAddress(student.getAddress());
+        studentRepository.save(student);
+    }
 }
