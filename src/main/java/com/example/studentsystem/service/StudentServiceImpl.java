@@ -35,4 +35,14 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setAddress(student.getAddress());
         studentRepository.save(student);
     }
+
+    /*@Override
+    public List<Student> search(String name) {
+        return studentRepository.findAll().stream().filter(student -> student.getName().equals(name)).toList();
+    }*/
+
+    @Override
+    public List<Student> search(String name) {
+        return studentRepository.findByName(name);
+    }
 }

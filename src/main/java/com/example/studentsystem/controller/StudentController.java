@@ -36,4 +36,9 @@ public class StudentController {
         studentService.editStudent(student);
         return "Student was edited";
     }
+
+    @GetMapping("/search")
+    public List<Student> search(@RequestParam(required = true) String name) {
+        return studentService.search(name); // studentService.search(name);
+    }
 }

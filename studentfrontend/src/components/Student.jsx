@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Container, Paper, Button, Icon, Box } from "@mui/material";
+import { Container, Paper, Button, Icon, Box, Typography } from "@mui/material";
 import styles from "../components/Students.module.css";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -11,11 +11,13 @@ export default function Student() {
   const [student, setStudent] = useState(null);
   const [students, setStudents] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState(null);
+  const [searchStudent, setSearchStudent] = useState([]);
 
   const clear = () => {
     setIsEditing(false);
-    setName('');
-    setAddress('');
+    setName("");
+    setAddress("");
     setStudent(null);
   };
 
@@ -37,6 +39,10 @@ export default function Student() {
       .then((res) => res.json())
       .then((result) => {
         setStudents(result);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setError(error.message);
       });
   }, [students]);
 
@@ -70,6 +76,18 @@ export default function Student() {
     setAddress(student.address);
     setStudent(student);
     setIsEditing(true);
+  };
+
+  const handleSearchStudent = () => {
+    fetch("http://localhost:8080/student/search?name=" + name)
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        setSearchStudent(result.length == 0 ? null : result);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   return (
@@ -118,40 +136,92 @@ export default function Student() {
 
       <Paper elevation={3} style={paperStyle}>
         <h1 className={styles.subtitle}>Students</h1>
-        {students.map((student) => (
-          <Paper
-            elevation={6}
-            style={{ margin: "10px", padding: "15px", textAlign: "left" }}
-            className={styles.students}
-            key={student.id}
-          >
-            Id: {student.id}
-            <br />
-            Name: {student.name}
-            <br />
-            Address: {student.address}
-            <Box display={"flex"} gap={"10px"}>
-              <Button
-                variant="contained"
-                onClick={() => handleDeleteStudent(student)}
-                fullWidth
-              >
-                <Icon>
-                  <Delete />
-                </Icon>
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleEditStudent(student)}
-                fullWidth
-              >
-                <Icon>
-                  <Edit />
-                </Icon>
-              </Button>
-            </Box>
-          </Paper>
-        ))}
+        {students.length == 0 ? (
+          <>
+            {error == null ? (
+              <Typography color="#1876d2" fontSize="1.25rem">
+                Loading...
+              </Typography>
+            ) : (
+              <Typography color="error" fontWeight="bold" fontSize="1.25rem">
+                Error: {error}
+              </Typography>
+            )}
+          </>
+        ) : (
+          students.map((student) => (
+            <Paper
+              elevation={6}
+              style={{ margin: "10px", padding: "15px", textAlign: "left" }}
+              className={styles.students}
+              key={student.id}
+            >
+              Id: {student.id}
+              <br />
+              Name: {student.name}
+              <br />
+              Address: {student.address}
+              <Box display={"flex"} gap={"10px"}>
+                <Button
+                  variant="contained"
+                  onClick={() => handleDeleteStudent(student)}
+                  fullWidth
+                >
+                  <Icon>
+                    <Delete />
+                  </Icon>
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleEditStudent(student)}
+                  fullWidth
+                >
+                  <Icon>
+                    <Edit />
+                  </Icon>
+                </Button>
+              </Box>
+            </Paper>
+          ))
+        )}
+      </Paper>
+
+      <Paper elevation={3} style={paperStyle}>
+        <h1 className={styles.title}>Search Student</h1>
+        <form noValidate autoComplete="off">
+          <TextField
+            id="outlined-basic"
+            label="Student Name"
+            variant="outlined"
+            margin="dense"
+            fullWidth
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Button variant="contained" onClick={handleSearchStudent} fullWidth>
+            Search
+          </Button>
+        </form>
+        {searchStudent == null ? (
+          <Typography color="error" fontWeight="bold" margin="4px 0 0 0">
+            Student not found...
+          </Typography>
+        ) : (
+          searchStudent.map((student) => (
+            <Paper
+              elevation={6}
+              style={{ margin: "10px", padding: "15px", textAlign: "left" }}
+              className={styles.students}
+              key={student.id}
+            >
+              Id: {student.id}
+              <br />
+              Name: {student.name}
+              <br />
+              Address: {student.address}
+            </Paper>
+          ))
+        )}
       </Paper>
     </Container>
   );
