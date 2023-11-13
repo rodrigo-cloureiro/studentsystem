@@ -39,6 +39,6 @@ public class StudentController {
 
     @GetMapping("/search")
     public List<Student> search(@RequestParam(required = true) String name) {
-        return studentService.search(name); // studentService.search(name);
+        return studentService.searchStudent(name); // studentService.search(name);
     }
 }

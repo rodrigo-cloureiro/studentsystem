@@ -9,5 +9,5 @@ public interface StudentService {
     List<Student> getAllStudents();
     void deleteStudent(Student student);
     void editStudent(Student student);
-    List<Student> search(String name);
+    List<Student> searchStudent(String name);
 }

@@ -42,7 +42,7 @@ public class StudentServiceImpl implements StudentService {
     }*/
 
     @Override
-    public List<Student> search(String name) {
+    public List<Student> searchStudent(String name) {
         return studentRepository.findByName(name);
     }
 }
